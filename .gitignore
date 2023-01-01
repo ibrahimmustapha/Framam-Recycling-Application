@@ -1,0 +1,26 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+framam-client/node_modules
+framam-client/.pnp
+framam-client/.pnp.js
+
+# testing
+framam-client/coverage
+
+# production
+framam-client/build
+
+# misc
+framam-client/DS_Store
+framam-client/env.local
+framam-client/env.development.local
+framam-client/env.test.local
+framam-client/env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# backend
+framam-server/node_modules
