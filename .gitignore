@@ -24,3 +24,4 @@ yarn-error.log*
 
 # backend
 framam-server/node_modules
+framam-server/.env

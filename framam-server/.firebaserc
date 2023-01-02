@@ -1,0 +1,10 @@
+{
+  "projects": {
+    "default": "framam-recycling-application"
+  },
+  "rules": {
+    ".read": true,
+    ".write": true,
+    ".update": true
+  }
+}
