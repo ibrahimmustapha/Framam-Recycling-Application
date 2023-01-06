@@ -4,13 +4,13 @@ const {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signOut,
 } = require("firebase/auth");
 
 // Initialize Firebase
 firebase.initializeApp(Config.firebaseConfig);
 
 const auth = getAuth();
-
 // Rgister users
 exports.registerUser = async (req, res) => {
   try {
@@ -28,7 +28,8 @@ exports.registerUser = async (req, res) => {
         const errorMessage = error.message;
         console.log(errorCode + "an error occured: " + errorMessage);
       });
-    res.redirect("/");
+    console.log("Authentication successful!");
+    res.redirect("/api/v1/all_user_data");
   } catch (e) {
     res.redirect("register");
   }
@@ -51,6 +52,18 @@ exports.loginUser = async (req, res) => {
   } catch (err) {
     console.log(err);
   }
+};
+
+// Sign user out
+exports.signOut = (req, res) => {
+  signOut(auth)
+    .then(() => {
+      res.send("Sign out successful");
+    })
+    .catch((e) => {
+      console.log(e);
+      res.send("Sign out failed");
+    });
 };
 
 exports.testExample = async (req, res) => {

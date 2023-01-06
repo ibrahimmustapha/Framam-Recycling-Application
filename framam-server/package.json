@@ -9,10 +9,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "firebase": "^9.15.0",
+    "firebase": "^9.13.0",
     "firebase-admin": "^11.4.1",
+    "firestore": "^1.1.6",
     "nodemon": "^2.0.20"
   }
 }
