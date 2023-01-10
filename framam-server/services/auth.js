@@ -52,6 +52,10 @@ exports.registerUser = async (req, res) => {
               job: job,
               address: address,
             },
+            image: {
+              name: "",
+              url: "",
+            }
           });
         }
         console.log(user.uid);
@@ -65,7 +69,7 @@ exports.registerUser = async (req, res) => {
     console.log("Authentication successful!");
     res.send("Authentication successful!");
   } catch (e) {
-    res.redirect("Something went wrong, please try again");
+    res.send("Something went wrong, please try again");
   }
 };
 
