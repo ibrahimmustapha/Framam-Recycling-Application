@@ -6,22 +6,56 @@ const {
   signInWithEmailAndPassword,
   signOut,
 } = require("firebase/auth");
+const {
+  getFirestore,
+  setDoc,
+  collection,
+  doc
+} = require("firebase/firestore");
 
 // Initialize Firebase
-firebase.initializeApp(Config.firebaseConfig);
+const app = firebase.initializeApp(Config.firebaseConfig);
 
+const db = getFirestore(app);
 const auth = getAuth();
+
 // Rgister users
 exports.registerUser = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const {
+      email,
+      password,
+      fullname: { firstname, lastname },
+      bio: { age, job, address },
+    } = req.body;
+    
     if (!email || !password) {
       return res.status(400).json({ error: "Email and password are required" });
     }
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
-        console.log(user);
+        // if user is registered add the following data to the user doc [db].
+        if (user) {
+          const ref = doc(collection(db, "user"), auth.currentUser.uid);
+          const username = `${firstname}${lastname}${age}`;
+          setDoc(ref, {
+            email: auth.currentUser.email,
+            uid: auth.currentUser.uid,
+            username: username.toLowerCase(),
+            fullname: {
+              firstname: firstname,
+              lastname: lastname,
+            },
+            bio: {
+              age: age,
+              job: job,
+              address: address,
+            },
+          });
+        }
+        console.log(user.uid);
+        console.log(auth.currentUser.uid);
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -29,9 +63,9 @@ exports.registerUser = async (req, res) => {
         console.log(errorCode + "an error occured: " + errorMessage);
       });
     console.log("Authentication successful!");
-    res.redirect("/api/v1/all_user_data");
+    res.send("Authentication successful!");
   } catch (e) {
-    res.redirect("register");
+    res.redirect("Something went wrong, please try again");
   }
 };
 
@@ -58,7 +92,10 @@ exports.loginUser = async (req, res) => {
 exports.signOut = (req, res) => {
   signOut(auth)
     .then(() => {
-      res.send("Sign out successful");
+      console.log("Sign out successful");
+      // destroy session data
+      req.session = null;
+      res.redirect("/api/v1/register");
     })
     .catch((e) => {
       console.log(e);

@@ -23,7 +23,7 @@ input {
 input[type=button] {
     height: 45px;
     color: white;
-    background-color: rgb(204, 192, 151);
+    background-color: rgb(43, 165, 64);
 }
 
 .passwordContainer input {
@@ -32,7 +32,7 @@ input[type=button] {
 
 .headerContainer {
     /* background-color: rgb(231, 157, 88); */
-    background-image: url("../../../resources/images/rec5.jpg");
+    background-image: url("../../../resources/images/recycling-2.jpg");
     background-repeat: no-repeat, repeat;
     background-size: cover;
     background-position: center;
