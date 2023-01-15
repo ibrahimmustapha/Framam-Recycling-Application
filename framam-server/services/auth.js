@@ -10,7 +10,8 @@ const {
   getFirestore,
   setDoc,
   collection,
-  doc
+  doc,
+  getDoc
 } = require("firebase/firestore");
 
 // Initialize Firebase
@@ -59,23 +60,20 @@ exports.registerUser = async (req, res) => {
           });
         }
         console.log(user.uid);
-        console.log(auth.currentUser.uid);
+        res.send({uid: user.uid});
       })
       .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode + "an error occured: " + errorMessage);
+        console.log("an error occured: " + error.message);
       });
     console.log("Authentication successful!");
-    res.send("Authentication successful!");
+    // res.send(auth.currentUser.uid);
   } catch (e) {
-    res.send("Something went wrong, please try again");
+    res.status(400).json("Registration Failed. Please try again!");
   }
 };
 
 // Login users
 exports.loginUser = async (req, res) => {
-  try {
     const { email, password } = req.body;
     if (!email || !password) {
       return res.status(400).json({ error: "Email and password are required" });
@@ -83,23 +81,23 @@ exports.loginUser = async (req, res) => {
     signInWithEmailAndPassword(auth, email, password).then(
       (userCredentials) => {
         const user = userCredentials.user;
-        console.log(user);
+        const ref = doc(db, "user", user.uid);
+        const querySnapshot = getDoc(ref);
+        querySnapshot.then((users) => {
+          res.status(200).json(users.data());
+        })
       }
-    );
-    res.send("Login successful");
-  } catch (err) {
-    console.log(err);
-  }
+    ).catch(e => res.status(400).json({error: "Authentication Failed. Please try again!"}))
 };
 
 // Sign user out
 exports.signOut = (req, res) => {
   signOut(auth)
     .then(() => {
-      console.log("Sign out successful");
       // destroy session data
+      console.log("Sign out successful");
       req.session = null;
-      res.redirect("/api/v1/register");
+      res.send("Signout successfully! ");
     })
     .catch((e) => {
       console.log(e);

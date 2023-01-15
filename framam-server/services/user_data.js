@@ -63,7 +63,7 @@ exports.getUserDetail = async (req, res) => {
     const querySnapshot = await getDoc(ref);
     // if (querySnapshot.exists()) {
     console.log(querySnapshot.data());
-    res.send([querySnapshot.data()]);
+    res.send(querySnapshot.data());
     // } else {
     //   console.log("No such doc");
     // }

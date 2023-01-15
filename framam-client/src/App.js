@@ -1,5 +1,8 @@
 import './App.css';
-import { Login } from './components/auth/Login';
+import LoginUser from '../src/components/auth/Login';
+import Users  from '../src/components/Profile/User';
+import Error from './components/ErrorPage';
+
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 
 function App() {
@@ -8,7 +11,9 @@ function App() {
       <h1>Welcome, Framam Recycling!</h1>
       <Router>
         <Routes>
-        <Route index element={<Login />} />
+        <Route index path='/' element={<LoginUser />} />
+        <Route path='/users/:uid' element={<Users key={window.location.pathname} />} />
+        <Route path='*' element={<Error />} />
         </Routes>
         </Router>
     </div>

@@ -1,15 +1,19 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import "./css/Login.css";
+import { useNavigate } from "react-router-dom";
+import "./css/RegisterUser.css";
 
-export const Login = () => {
+const LoginUser = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [user, setUser] = useState({});
+  const [error, setError] = useState("");
 
-  const registerUser = async () => {
-    await axios
+  const signUserIn =  () => {
+     axios
       .post(
-        "http://localhost:3000/api/v1/register",
+        "http://localhost:3000/api/v1/login",
         {
           email: email,
           password: password,
@@ -22,11 +26,24 @@ export const Login = () => {
         }
       )
       .then((res) => {
-        console.log(res.data)
+        // setLoading(true);
+        setUser(res.data);
+        console.log(res.data);
+        console.log(user);
+        navigate(`/users/${res.data.uid}`, {replace: true})
       })
       .catch((err) => {
-        console.log("Something happend: " + err);
+        setError(err.message);
+        console.log("Something happend: " + err.message);
       });
+  };
+
+  useEffect(() => {
+    signUserIn();
+  }, [])
+  
+  const getUserDetails = () => {
+    signUserIn();
   };
 
   return (
@@ -56,9 +73,11 @@ export const Login = () => {
           />
         </div>
         <div className="loginButtonContainer">
-          <input type="button" value="Get Started" onClick={registerUser} />
+          <input type="button" value="Get Started" onClick={getUserDetails} />
         </div>
       </form>
     </div>
   );
 };
+
+export default LoginUser;
