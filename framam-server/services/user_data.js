@@ -2,14 +2,9 @@ const { initializeApp } = require("firebase/app");
 const { getAuth } = require("firebase/auth");
 const {
   getFirestore,
-  addDoc,
   collection,
-  getDocs,
   getDoc,
   doc,
-  where,
-  query,
-  setDoc,
   updateDoc,
 } = require("firebase/firestore");
 const { uploadBytes, ref, getStorage } = require("firebase/storage");
@@ -25,54 +20,22 @@ const auth = getAuth();
 
 const storage = getStorage();
 
-exports.addUserDetails = async (req, res) => {
-  try {
-    const { firstname, lastname, age, address } = req.body;
-    const docRef = await addDoc(collection(db, "user_details"), {
-      firstname: firstname,
-      lastname: lastname,
-      age: age,
-      address: address,
-    });
-    console.log("Document added with ID: ", docRef.id);
-    res.send("Successfully Added to database");
-  } catch (e) {
-    console.log("Error occurred while adding user details: ", e);
-  }
-};
-
-exports.getUserDetails = async (req, res) => {
-  try {
-    const querySnapshot = await getDocs(collection(db, "user"));
-    const tempDoc = [];
-    querySnapshot.forEach((doc) => {
-      console.log(`${doc.id} => ${doc.data()}`);
-      tempDoc.push(doc.id, doc.data());
-    });
-    res.json(tempDoc);
-  } catch (e) {
-    console.log("Error occurred while getting user details: ", e);
-  }
-};
-
+// get user based on uid
 exports.getUserDetail = async (req, res) => {
   const uid = req.params.uid;
   console.log(uid);
   try {
     const ref = doc(db, "user", uid);
     const querySnapshot = await getDoc(ref);
-    // if (querySnapshot.exists()) {
     console.log(querySnapshot.data());
     res.send(querySnapshot.data());
-    // } else {
-    //   console.log("No such doc");
-    // }
   } catch (e) {
     console.log(e);
     res.send(e);
   }
 };
 
+// upload user photo
 exports.uploodPhoto = async (req, res) => {
   const file = req.file;
   const imageRef = ref(storage, file.originalname);

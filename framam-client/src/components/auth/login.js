@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Navbar from "../navbar/navbar";
 import "./css/RegisterUser.css";
 
 const LoginUser = () => {
@@ -47,6 +48,7 @@ const LoginUser = () => {
   };
 
   return (
+    <Navbar>
     <div className="loginContainer">
       <form>
         <div className="headerContainer"></div>
@@ -73,10 +75,11 @@ const LoginUser = () => {
           />
         </div>
         <div className="loginButtonContainer">
-          <input type="button" value="Get Started" onClick={getUserDetails} />
+          <input type="button" value="Sign" onClick={getUserDetails} />
         </div>
       </form>
     </div>
+    </Navbar>
   );
 };
 

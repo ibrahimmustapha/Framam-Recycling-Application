@@ -20,7 +20,7 @@ const app = firebase.initializeApp(Config.firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth();
 
-// Rgister users
+// Register users
 exports.registerUser = async (req, res) => {
   try {
     const {
@@ -103,8 +103,4 @@ exports.signOut = (req, res) => {
       console.log(e);
       res.send("Sign out failed");
     });
-};
-
-exports.testExample = async (req, res) => {
-  res.send({ version: "0.0.1 beta" });
 };
