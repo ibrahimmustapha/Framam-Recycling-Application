@@ -11,7 +11,7 @@ const {
   setDoc,
   collection,
   doc,
-  getDoc
+  getDoc,
 } = require("firebase/firestore");
 
 // Initialize Firebase
@@ -29,7 +29,7 @@ exports.registerUser = async (req, res) => {
       fullname: { firstname, lastname },
       bio: { age, job, address },
     } = req.body;
-    
+
     if (!email || !password) {
       return res.status(400).json({ error: "Email and password are required" });
     }
@@ -56,11 +56,12 @@ exports.registerUser = async (req, res) => {
             image: {
               name: "",
               url: "",
-            }
+            },
+            points: 0,
           });
         }
         console.log(user.uid);
-        res.send({uid: user.uid});
+        res.send({ uid: user.uid });
       })
       .catch((error) => {
         console.log("an error occured: " + error.message);
@@ -74,20 +75,24 @@ exports.registerUser = async (req, res) => {
 
 // Login users
 exports.loginUser = async (req, res) => {
-    const { email, password } = req.body;
-    if (!email || !password) {
-      return res.status(400).json({ error: "Email and password are required" });
-    }
-    signInWithEmailAndPassword(auth, email, password).then(
-      (userCredentials) => {
-        const user = userCredentials.user;
-        const ref = doc(db, "user", user.uid);
-        const querySnapshot = getDoc(ref);
-        querySnapshot.then((users) => {
-          res.status(200).json(users.data());
-        })
-      }
-    ).catch(e => res.status(400).json({error: "Authentication Failed. Please try again!"}))
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({ error: "Email and password are required" });
+  }
+  signInWithEmailAndPassword(auth, email, password)
+    .then((userCredentials) => {
+      const user = userCredentials.user;
+      const ref = doc(db, "user", user.uid);
+      const querySnapshot = getDoc(ref);
+      querySnapshot.then((users) => {
+        res.status(200).json(users.data());
+      });
+    })
+    .catch((e) =>
+      res
+        .status(400)
+        .json({ error: "Authentication Failed. Please try again!" })
+    );
 };
 
 // Sign user out
