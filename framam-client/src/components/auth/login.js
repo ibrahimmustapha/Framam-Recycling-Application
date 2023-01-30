@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../navbar/navbar";
@@ -6,32 +6,26 @@ import "./css/RegisterUser.css";
 
 const LoginUser = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [user, setUser] = useState({});
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
 
-  const signUserIn =  () => {
-     axios
-      .post(
-        "http://localhost:3000/api/v1/login",
-        {
-          email: email,
-          password: password,
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await axios
+      .post("http://localhost:3000/api/v1/login", formData, {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
         },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-          },
-        }
-      )
+      })
       .then((res) => {
-        // setLoading(true);
-        setUser(res.data);
+        localStorage.setItem("idToken", res.data.idToken);
         console.log(res.data);
-        console.log(user);
-        navigate(`/users/${res.data.uid}`, {replace: true})
+        navigate(`/users/${res.data.userId}`);
       })
       .catch((err) => {
         setError(err.message);
@@ -39,46 +33,62 @@ const LoginUser = () => {
       });
   };
 
-  useEffect(() => {
-    signUserIn();
-  }, [])
-  
-  const getUserDetails = () => {
-    signUserIn();
-  };
-
   return (
     <Navbar>
-    <div className="loginContainer">
-      <form>
-        <div className="headerContainer"></div>
-        <div className="emailContainer">
-          <label>Email</label>
-          <br />
-          <input
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
-            type="email"
-            placeholder="example@gmail.com"
-          />
-        </div>
-        <div className="passwordContainer">
-          <label>Password</label>
-          <br />
-          <input
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
-            type="password"
-            placeholder="8 or more characters"
-          />
-        </div>
-        <div className="loginButtonContainer">
-          <input type="button" value="Sign" onClick={getUserDetails} />
-        </div>
-      </form>
-    </div>
+      <div className="">
+        <form>
+          <div className="min-h-screen bg-base-300 mt--4 pt-6">
+            <div className="flex-col lg:flex-row-reverse flex justify-center">
+              <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+                <div className="card-body">
+                  <h1 className="text-4xl font-bold text-center">Login Here</h1>
+                  <div className="divider"></div>
+                  <div className="form-control">
+                    <label className="input-group">
+                      <span>Email</span>
+                      <input
+                        type="email"
+                        name="email"
+                        placeholder="example@site.com"
+                        className="input input-bordered"
+                        onChange={handleChange}
+                        value={formData.email}
+                      />
+                    </label>
+                  </div>
+                  <div className="form-control">
+                    <label className="input-group">
+                      <span>Password</span>
+                      <input
+                        type="password"
+                        name="password"
+                        placeholder="********"
+                        className="input input-bordered"
+                        onChange={handleChange}
+                        value={formData.password}
+                      />
+                    </label>
+                    <label className="label">
+                      <a href="#" className="label-text-alt link link-hover">
+                        Forgot password?
+                      </a>
+                    </label>
+                  </div>
+                  <div className="form-control mt-6">
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      onClick={handleSubmit}
+                    >
+                      Login
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
     </Navbar>
   );
 };

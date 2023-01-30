@@ -63,7 +63,6 @@ exports.getReward = async (req, res) => {
         updateDoc(ref, {
           points: increment(100),
         });
-        console.log("---------------------------------------");
         console.log(auth.currentUser);
       } else {
         console.log("something went wrong :(");

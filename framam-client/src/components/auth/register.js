@@ -6,6 +6,16 @@ import "./css/RegisterUser.css";
 
 const Register = () => {
   const navigate = useNavigate();
+  const [userData, setUserData] = useState({
+    email: "",
+    password: "",
+    firstname: "",
+    lastname: "",
+    address: "",
+    age: 0,
+    job: "",
+
+  });
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstname, setFirstname] = useState("");
@@ -13,11 +23,11 @@ const Register = () => {
   const [address, setAddress] = useState("");
   const [age, setAge] = useState(0);
   const [job, setJob] = useState("");
-  const [photo, setPhoto] = useState([]);
+  const [photo, setPhoto] = useState(null);
   const [error, setError] = useState("");
 
-  const signUserIn = () => {
-    axios
+  const signUserIn = async () => {
+    await axios
       .post(
         "http://localhost:3000/api/v1/register",
         {
@@ -51,31 +61,34 @@ const Register = () => {
       });
   };
 
-  const uploadUserPhoto = () => {
-    axios.post(
-      "http://localhost:3000/api/v1/add_photo",
-      {
-        photo: photo,
-      },
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          "Access-Control-Allow-Origin": "*",
+  const uploadUserPhoto = async () => {
+    await axios
+      .post(
+        "http://localhost:3000/api/v1/add_photo",
+        {
+          photo: photo,
         },
-      }
-    ).then((response) => {
-      console.log(response.data)
-    })
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response.data);
+      });
   };
 
-  useEffect(() => {
-    signUserIn();
-    uploadUserPhoto();
-  }, []);
+  // useEffect(() => {
+  //   signUserIn();
+  //   uploadUserPhoto();
+  // }, []);
 
   const getUserDetails = () => {
-    signUserIn();
-    uploadUserPhoto();  
+    if (signUserIn()) {
+      uploadUserPhoto();
+    }
   };
 
   return (

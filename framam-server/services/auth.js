@@ -1,4 +1,5 @@
 const firebase = require("firebase/app");
+const admin = require("firebase-admin");
 const Config = require("../firebase-config");
 const {
   getAuth,
@@ -19,6 +20,18 @@ const app = firebase.initializeApp(Config.firebaseConfig);
 
 const db = getFirestore(app);
 const auth = getAuth();
+
+// middleware to verfiy the idToken
+const verifyIdToken = (req, res, next) => {
+  const idToken = req.headers.authorization;
+
+  // verify the idToken
+  admin
+    .auth()
+    .verifyIdToken(idToken)
+    .then(() => next())
+    .catch(() => { res.status(401).json({ message: "Unauthorized"})});
+};
 
 // Register users
 exports.registerUser = async (req, res) => {
@@ -77,22 +90,12 @@ exports.registerUser = async (req, res) => {
 exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    return res.status(400).json({ error: "Email and password are required" });
+    return res.status(401).json({ error: "Email and password are required" });
   }
-  signInWithEmailAndPassword(auth, email, password)
-    .then((userCredentials) => {
-      const user = userCredentials.user;
-      const ref = doc(db, "user", user.uid);
-      const querySnapshot = getDoc(ref);
-      querySnapshot.then((users) => {
-        res.status(200).json(users.data());
-      });
-    })
-    .catch((e) =>
-      res
-        .status(400)
-        .json({ error: "Authentication Failed. Please try again!" })
-    );
+  const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const idToken = await userCredential.user.getIdToken();
+      const userId = userCredential.user.uid;
+      res.json({idToken, userId})
 };
 
 // Sign user out
