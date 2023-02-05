@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../navbar/navbar";
 import "./css/RegisterUser.css";
 
@@ -24,6 +24,7 @@ const LoginUser = () => {
       })
       .then((res) => {
         localStorage.setItem("idToken", res.data.idToken);
+        localStorage.setItem("uid", res.data.userId);
         console.log(res.data);
         navigate(`/users/${res.data.userId}`);
       })
@@ -37,11 +38,11 @@ const LoginUser = () => {
     <Navbar>
       <div className="">
         <form>
-          <div className="min-h-screen bg-base-300 mt--4 pt-6">
-            <div className="flex-col lg:flex-row-reverse flex justify-center">
-              <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+          <div className="min-h-screen bg-base-300 pt-10">
+            <div className="flex justify-center">
+              <div className="card shadow-2xl bg-base-100">
                 <div className="card-body">
-                  <h1 className="text-4xl font-bold text-center">Login Here</h1>
+                  <h1 className="text-4xl font-bold text-center">Login</h1>
                   <div className="divider"></div>
                   <div className="form-control">
                     <label className="input-group">
@@ -69,9 +70,9 @@ const LoginUser = () => {
                       />
                     </label>
                     <label className="label">
-                      <a href="#" className="label-text-alt link link-hover">
+                      <Link to="#" className="label-text-alt link link-hover">
                         Forgot password?
-                      </a>
+                      </Link>
                     </label>
                   </div>
                   <div className="form-control mt-6">

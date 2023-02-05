@@ -7,11 +7,11 @@ const Navbar = ({ children }) => {
     <div>
       <div className="navbar bg-base-100">
         <div className="navbar-start">
-          <a className="btn btn-ghost normal-case text-xl">Framam</a>
+          <Link className="btn btn-ghost normal-case text-xl">Framam</Link>
         </div>
         <div className="navbar-end">
           <Link to="/login" className="btn btn-ghost mr-5">Login</Link>
-          <Link className="btn" to="/register">Sign Up for Free</Link>
+          <Link className="btn" to="/register">Register</Link>
         </div>
       </div>
       <div>{children}</div>

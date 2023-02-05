@@ -30,60 +30,59 @@ const verifyIdToken = (req, res, next) => {
     .auth()
     .verifyIdToken(idToken)
     .then(() => next())
-    .catch(() => { res.status(401).json({ message: "Unauthorized"})});
+    .catch(() => {
+      res.status(401).json({ message: "Unauthorized" });
+    });
 };
 
 // Register users
 exports.registerUser = async (req, res) => {
-  try {
-    const {
-      email,
-      password,
-      fullname: { firstname, lastname },
-      bio: { age, job, address },
-    } = req.body;
+  const {
+    email,
+    password,
+    fullname: { firstname, lastname },
+    bio: { age, job, address, about },
+  } = req.body;
 
-    if (!email || !password) {
-      return res.status(400).json({ error: "Email and password are required" });
-    }
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredentials) => {
-        const user = userCredentials.user;
-        // if user is registered add the following data to the user doc [db].
-        if (user) {
-          const ref = doc(collection(db, "user"), auth.currentUser.uid);
-          const username = `${firstname}${lastname}${age}`;
-          setDoc(ref, {
-            email: auth.currentUser.email,
-            uid: auth.currentUser.uid,
-            username: username.toLowerCase(),
-            fullname: {
-              firstname: firstname,
-              lastname: lastname,
-            },
-            bio: {
-              age: age,
-              job: job,
-              address: address,
-            },
-            image: {
-              name: "",
-              url: "",
-            },
-            points: 0,
-          });
-        }
-        console.log(user.uid);
-        res.send({ uid: user.uid });
-      })
-      .catch((error) => {
-        console.log("an error occured: " + error.message);
-      });
-    console.log("Authentication successful!");
-    // res.send(auth.currentUser.uid);
-  } catch (e) {
-    res.status(400).json("Registration Failed. Please try again!");
+  if (!email || !password) {
+    return res.status(400).json({ error: "Email and password are required" });
   }
+
+  const userCredential = await createUserWithEmailAndPassword(
+    auth,
+    email,
+    password
+  );
+
+  const user = userCredential.user;
+
+  // if user is registered add the following data to the user doc [db].
+  if (user) {
+    const ref = doc(collection(db, "user"), auth.currentUser.uid);
+    const username = `${firstname}${lastname}${age}`;
+    setDoc(ref, {
+      email: auth.currentUser.email,
+      uid: auth.currentUser.uid,
+      username: username.toLowerCase(),
+      fullname: {
+        firstname: firstname,
+        lastname: lastname,
+      },
+      bio: {
+        age: age,
+        job: job,
+        address: address,
+        about: about,
+      },
+      image: {
+        name: "",
+        url: "",
+      },
+      points: 0,
+    });
+  }
+  const idToken = await userCredential.user.getIdToken();
+  res.json({ uid: user.uid, idToken });
 };
 
 // Login users
@@ -92,10 +91,14 @@ exports.loginUser = async (req, res) => {
   if (!email || !password) {
     return res.status(401).json({ error: "Email and password are required" });
   }
-  const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const idToken = await userCredential.user.getIdToken();
-      const userId = userCredential.user.uid;
-      res.json({idToken, userId})
+  const userCredential = await signInWithEmailAndPassword(
+    auth,
+    email,
+    password
+  );
+  const idToken = await userCredential.user.getIdToken();
+  const userId = userCredential.user.uid;
+  res.json({ idToken, userId });
 };
 
 // Sign user out

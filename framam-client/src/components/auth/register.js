@@ -1,21 +1,10 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../navbar/navbar";
-import "./css/RegisterUser.css";
 
 const Register = () => {
   const navigate = useNavigate();
-  const [userData, setUserData] = useState({
-    email: "",
-    password: "",
-    firstname: "",
-    lastname: "",
-    address: "",
-    age: 0,
-    job: "",
-
-  });
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstname, setFirstname] = useState("");
@@ -23,9 +12,14 @@ const Register = () => {
   const [address, setAddress] = useState("");
   const [age, setAge] = useState(0);
   const [job, setJob] = useState("");
-  const [photo, setPhoto] = useState(null);
+  const [about, setAbout] = useState("");
   const [error, setError] = useState("");
+  const [photo, setPhoto] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null);
+  const defaultImageUrl =
+    "https://img.icons8.com/external-others-inmotus-design/256/external-Avatar-avatars-others-inmotus-design-31.png";
 
+  // Sign up new users
   const signUserIn = async () => {
     await axios
       .post(
@@ -41,6 +35,7 @@ const Register = () => {
             age: age,
             job: job,
             address: address,
+            about: about,
           },
         },
         {
@@ -51,7 +46,7 @@ const Register = () => {
         }
       )
       .then((res) => {
-        // setLoading(true);
+        localStorage.setItem("idToken", res.data.idToken);
         console.log(res.data);
         navigate(`/users/${res.data.uid}`, { replace: true });
       })
@@ -61,6 +56,7 @@ const Register = () => {
       });
   };
 
+  // upload photo to firebase storage
   const uploadUserPhoto = async () => {
     await axios
       .post(
@@ -80,112 +76,161 @@ const Register = () => {
       });
   };
 
-  // useEffect(() => {
-  //   signUserIn();
-  //   uploadUserPhoto();
-  // }, []);
-
   const getUserDetails = () => {
     if (signUserIn()) {
       uploadUserPhoto();
     }
   };
 
+  // display image after selecting from desktop
+  useEffect(() => {
+    if (photo) {
+      setImageUrl(URL.createObjectURL(photo));
+    }
+  }, [photo]);
+
   return (
     <Navbar>
-      <div className="loginContainer">
+      <div className="">
         <form>
-          <div className="headerContainer"></div>
-          <div className="emailContainer">
-            <label>Email</label>
-            <br />
-            <input
-              onChange={(e) => {
-                setEmail(e.target.value);
-              }}
-              type="email"
-              placeholder="example@gmail.com"
-            />
-          </div>
-          <div className="passwordContainer">
-            <label>Password</label>
-            <br />
-            <input
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
-              type="password"
-              placeholder="8 or more characters"
-            />
-          </div>
-          <div className="passwordContainer">
-            <label>Firstname</label>
-            <br />
-            <input
-              onChange={(e) => {
-                setFirstname(e.target.value);
-              }}
-              type="text"
-              placeholder="8 or more characters"
-            />
-          </div>
-          <div className="passwordContainer">
-            <label>Lastname</label>
-            <br />
-            <input
-              onChange={(e) => {
-                setLastname(e.target.value);
-              }}
-              type="text"
-              placeholder="8 or more characters"
-            />
-          </div>
-          <div className="passwordContainer">
-            <label>Address</label>
-            <br />
-            <input
-              onChange={(e) => {
-                setAddress(e.target.value);
-              }}
-              type="text"
-              placeholder="8 or more characters"
-            />
-          </div>
-          <div className="passwordContainer">
-            <label>Age</label>
-            <br />
-            <input
-              onChange={(e) => {
-                setAge(e.target.value);
-              }}
-              type="text"
-              placeholder="8 or more characters"
-            />
-          </div>
-          <div className="passwordContainer">
-            <label>job</label>
-            <br />
-            <input
-              onChange={(e) => {
-                setJob(e.target.value);
-              }}
-              type="text"
-              placeholder="8 or more characters"
-            />
-          </div>
-          <div className="passwordContainer">
-            <label>Profile Image</label>
-            <br />
-            <input
-              onChange={(e) => {
-                setPhoto(e.target.files[0]);
-              }}
-              type="file"
-              placeholder="8 or more characters"
-            />
-          </div>
-          <div className="loginButtonContainer">
-            <input type="button" value="Sign In" onClick={getUserDetails} />
+          <div className="min-h-screen bg-base-300 pt-10">
+            <div className="flex justify-center">
+              <div className="card shadow-2xl bg-base-100">
+                <div className="card-body">
+                  <h1 className="text-4xl font-bold text-center">
+                    Create New Account
+                  </h1>
+                  <div className="divider"></div>
+                  <div class="shrink-0 flex justify-center pb-5">
+                    <img
+                      className="h-20 w-20 object-cover rounded-full"
+                      src={imageUrl === null ? defaultImageUrl : imageUrl}
+                      alt="profile"
+                    />
+                  </div>
+                  <div className="flex">
+                    <div className="form-control">
+                      <label className="input-group">
+                        <span>Email</span>
+                        <input
+                          type="email"
+                          name="email"
+                          placeholder="example@site.com"
+                          className="input input-bordered"
+                          onChange={(e) => setEmail(e.target.value)}
+                        />
+                      </label>
+                    </div>
+                    <div className="form-control">
+                      <label className="input-group">
+                        <span>Password</span>
+                        <input
+                          type="password"
+                          name="password"
+                          placeholder="********"
+                          className="input input-bordered"
+                          onChange={(e) => setPassword(e.target.value)}
+                        />
+                      </label>
+                    </div>
+                  </div>
+                  <div className="divider">Fullname</div>
+                  <div className="flex">
+                    <div className="form-control">
+                      <label className="input-group">
+                        <span>Firstname</span>
+                        <input
+                          type="text"
+                          name="fname"
+                          placeholder="John"
+                          className="input input-bordered"
+                          onChange={(e) => setFirstname(e.target.value)}
+                        />
+                      </label>
+                    </div>
+                    <div className="form-control">
+                      <label className="input-group">
+                        <span>Lastname</span>
+                        <input
+                          type="text"
+                          name="lname"
+                          placeholder="Smith"
+                          className="input input-bordered"
+                          onChange={(e) => setLastname(e.target.value)}
+                        />
+                      </label>
+                    </div>
+                  </div>
+                  <div className="divider">Biography</div>
+                  <div className="flex pb-5">
+                    <div className="form-control">
+                      <label className="input-group">
+                        <span>Age</span>
+                        <input
+                          type="number"
+                          name="age"
+                          placeholder="0"
+                          className="input input-bordered"
+                          onChange={(e) => setAge(e.target.value)}
+                        />
+                      </label>
+                    </div>
+                    <div className="form-control">
+                      <label className="input-group">
+                        <span>Job</span>
+                        <input
+                          type="text"
+                          name="job"
+                          placeholder="mechanic"
+                          className="input input-bordered"
+                          onChange={(e) => setJob(e.target.value)}
+                        />
+                      </label>
+                    </div>
+                  </div>
+                  <div className="form-control">
+                    <label className="input-group">
+                      <span>Address</span>
+                      <input
+                        type="text"
+                        name="address"
+                        placeholder="Miami, United States"
+                        className="input input-bordered"
+                        onChange={(e) => setAddress(e.target.value)}
+                      />
+                    </label>
+                  </div>
+                  <div className="form-control">
+                    <p className="pt-3 pb-3">Short Bio</p>
+                    <textarea
+                      className="textarea textarea-bordered h-24"
+                      placeholder="Tell us about yourself"
+                      onChange={(e) => {
+                        setAbout(e.target.value);
+                      }}
+                    ></textarea>
+                  </div>
+                  <div className="divider">Upload Photo</div>
+                  <label className="block">
+                    <span className="sr-only">Profile Photo</span>
+                    <input
+                      type="file"
+                      className="hellofile-input hellofile-input-bordered hellofile-input-warning w-full max-w-xs"
+                      onChange={(e) => setPhoto(e.target.files[0])}
+                    />
+                  </label>
+                  <div className="form-control mt-6">
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      onClick={getUserDetails}
+                    >
+                      Register
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </form>
       </div>

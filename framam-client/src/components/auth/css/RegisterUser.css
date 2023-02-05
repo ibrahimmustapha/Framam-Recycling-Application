@@ -29,15 +29,3 @@ input[type=button] {
 .passwordContainer input {
     margin-bottom: 10px;
 }
-
-.headerContainer {
-    /* background-color: rgb(231, 157, 88); */
-    background-image: url("../../../resources/images/recycling-2.jpg");
-    background-repeat: no-repeat, repeat;
-    background-size: cover;
-    background-position: center;
-    padding: 120px;
-    margin-bottom: 20px;
-    color: white;
-    border-radius: 10px;
-}

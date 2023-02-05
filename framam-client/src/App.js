@@ -7,9 +7,8 @@ import Register from "./components/auth/register";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
 function App() {
-  const idToken = localStorage.getItem("idToken");
   return (
-    <div className="">
+    <div>
       <Router>
         <Routes>
           <Route
