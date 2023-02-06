@@ -5,12 +5,12 @@ import Error from "./components/error";
 import Register from "./components/auth/register";
 import Home from "./components/home";
 
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { Route, BrowserRouter as Router, Routes, HashRouter } from "react-router-dom";
 
 function App() {
   return (
     <div>
-      <Router>
+      <HashRouter>
         <Routes>
           <Route
             path="/users/:uid"
@@ -21,7 +21,7 @@ function App() {
           <Route index path="/home" element={<Home />} />
           <Route path="*" element={<Error />} />
         </Routes>
-      </Router>
+      </HashRouter>
     </div>
   );
 }
