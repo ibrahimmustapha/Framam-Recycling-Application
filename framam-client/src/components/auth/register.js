@@ -47,8 +47,9 @@ const Register = () => {
       )
       .then((res) => {
         localStorage.setItem("idToken", res.data.idToken);
+        localStorage.setItem("uid", res.data.uid);
         console.log(res.data);
-        navigate(`/users/${res.data.uid}`, { replace: true });
+        navigate(`/home`, { replace: true });
       })
       .catch((err) => {
         setError(err.message);
@@ -76,18 +77,18 @@ const Register = () => {
       });
   };
 
+    // display image after selecting from desktop
+    useEffect(() => {
+      if (photo) {
+        setImageUrl(URL.createObjectURL(photo));
+      }
+    }, [photo]);
+
   const getUserDetails = () => {
     if (signUserIn()) {
       uploadUserPhoto();
     }
   };
-
-  // display image after selecting from desktop
-  useEffect(() => {
-    if (photo) {
-      setImageUrl(URL.createObjectURL(photo));
-    }
-  }, [photo]);
 
   return (
     <Navbar>
@@ -215,7 +216,7 @@ const Register = () => {
                     <span className="sr-only">Profile Photo</span>
                     <input
                       type="file"
-                      className="hellofile-input hellofile-input-bordered hellofile-input-warning w-full max-w-xs"
+                      className="file-input w-full max-w-xs"
                       onChange={(e) => setPhoto(e.target.files[0])}
                     />
                   </label>

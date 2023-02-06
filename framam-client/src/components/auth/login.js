@@ -26,7 +26,7 @@ const LoginUser = () => {
         localStorage.setItem("idToken", res.data.idToken);
         localStorage.setItem("uid", res.data.userId);
         console.log(res.data);
-        navigate(`/users/${res.data.userId}`);
+        navigate(`/home`);
       })
       .catch((err) => {
         setError(err.message);
