@@ -54,7 +54,7 @@ exports.uploodPhoto = async (req, res) => {
         },
       });
       console.log(snapshot.metadata);
-      res.send("uploaded!");
+      res.send("image uploaded!");
     })
     .catch((e) => {
       console.log(e.message);
