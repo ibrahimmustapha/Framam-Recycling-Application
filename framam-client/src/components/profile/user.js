@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import UserNavbar from "../navbar/user-navbar";
 import "./css/User.css";
 
-const Users = () => {
+const User = () => {
   const { uid } = useParams();
   const [users, setUsers] = useState({});
   const [loading, setLoading] = useState(false);
@@ -84,4 +84,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default User;

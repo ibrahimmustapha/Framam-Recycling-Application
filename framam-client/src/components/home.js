@@ -32,7 +32,7 @@ const Home = () => {
   if (!idToken) {
     window.location.replace("/login");
   }
-  
+
   return (
     <UserNavbar
       userImage={users.image?.url}

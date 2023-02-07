@@ -1,5 +1,10 @@
 const { initializeApp } = require("firebase/app");
-const { getFirestore, collection, getDocs, doc } = require("firebase/firestore");
+const {
+  getFirestore,
+  collection,
+  getDocs,
+  doc,
+} = require("firebase/firestore");
 const Config = require("../firebase-config");
 
 // Initialize Firebase
@@ -16,9 +21,7 @@ exports.getUsers = async (req, res) => {
     const users = await getDocs(ref);
     const allUsers = [];
     users.forEach((user) => {
-      users.forEach((user) => {
-        allUsers.push(user.data());
-      })
+      allUsers.push(user.data());
     });
     res.send(allUsers);
   } catch (e) {

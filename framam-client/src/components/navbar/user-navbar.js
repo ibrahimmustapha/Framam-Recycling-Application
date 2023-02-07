@@ -70,7 +70,7 @@ const UserNavbar = ({ children, userImage, name }) => {
               <a>Recyclable Materials</a>
             </li>
             <li>
-              <a>Recycling Family</a>
+              <Link to="/family">Recycling Family</Link>
             </li>
           </ul>
         </div>
