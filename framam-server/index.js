@@ -5,6 +5,7 @@ const {initializeApp} = require('firebase/app');
 const auth = require('./routes/auth-router');
 const userData = require('./routes/user-data-router');
 const reward = require('./routes/reward-router');
+const users = require("./routes/users-router");
 const Config = require('./firebase-config');
 
 // Initialize Firebase
@@ -19,6 +20,7 @@ app.options('*',cors());
 app.use(auth);
 app.use(userData);
 app.use(reward);
+app.use(users);
 
 app.get('/', (req, res) => {
     res.send('Welcome to Framam Recycling!');
