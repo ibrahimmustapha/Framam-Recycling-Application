@@ -61,7 +61,7 @@ const UserNavbar = ({ children, userImage, name }) => {
         <div className="navbar-center hidden lg:flex breadcrumbs text-sm">
           <ul className="menu menu-horizontal px-1">
             <li>
-              <Link to="/home">Home</Link>
+              <Link to="/">Home</Link>
             </li>
             <li tabIndex={0}>
               <a>How to Recycle</a>

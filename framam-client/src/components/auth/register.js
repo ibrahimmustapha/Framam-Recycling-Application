@@ -49,7 +49,7 @@ const Register = () => {
         localStorage.setItem("idToken", res.data.idToken);
         localStorage.setItem("uid", res.data.uid);
         console.log(res.data);
-        navigate(`/home`, { replace: true });
+        navigate(`/`, { replace: true });
       })
       .catch((err) => {
         setError(err.message);
