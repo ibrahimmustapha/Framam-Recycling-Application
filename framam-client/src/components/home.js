@@ -4,7 +4,6 @@ import UserNavbar from "./navbar/user-navbar";
 
 const Home = () => {
   const [users, setUsers] = useState({});
-  const [loading, setLoading] = useState(false);
   const uid = localStorage.getItem("uid");
 
   useEffect(() => {
@@ -16,7 +15,6 @@ const Home = () => {
         },
       })
       .then((response) => {
-        setLoading(true);
         console.log(response.data);
         setUsers(response.data);
       })

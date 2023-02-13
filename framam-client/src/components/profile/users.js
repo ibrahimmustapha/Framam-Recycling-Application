@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import UserNavbar from "../navbar/user-navbar";
 import { Link } from "react-router-dom";
+import UsersLoading from "./usersLoading";
 
 const Users = () => {
   const uid = localStorage.getItem("uid");
@@ -44,6 +45,17 @@ const Users = () => {
         console.log(error);
       });
   }, []);
+
+  if (!loading) {
+    return (
+      <UserNavbar
+        userImage={user.image?.url}
+        name={`${user.fullname?.firstname} ${user.fullname?.lastname}`}
+      >
+        <UsersLoading />
+      </UserNavbar>
+    );
+  }
 
   return (
     <UserNavbar

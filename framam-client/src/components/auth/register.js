@@ -13,11 +13,10 @@ const Register = () => {
   const [age, setAge] = useState(0);
   const [job, setJob] = useState("");
   const [about, setAbout] = useState("");
-  const [error, setError] = useState("");
+  // const [error, setError] = useState("");
   const [photo, setPhoto] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
-  const defaultImageUrl =
-    "https://img.icons8.com/external-others-inmotus-design/256/external-Avatar-avatars-others-inmotus-design-31.png";
+  const defaultImageUrl = "https://img.icons8.com/external-others-inmotus-design/256/external-Avatar-avatars-others-inmotus-design-31.png";
 
   // Sign up new users
   const signUserIn = async () => {
@@ -52,7 +51,7 @@ const Register = () => {
         navigate(`/`, { replace: true });
       })
       .catch((err) => {
-        setError(err.message);
+        // setError(err.message);
         console.log("Something happend: " + err.message);
       });
   };
@@ -77,12 +76,12 @@ const Register = () => {
       });
   };
 
-    // display image after selecting from desktop
-    useEffect(() => {
-      if (photo) {
-        setImageUrl(URL.createObjectURL(photo));
-      }
-    }, [photo]);
+  // display image after selecting from desktop
+  useEffect(() => {
+    if (photo) {
+      setImageUrl(URL.createObjectURL(photo));
+    }
+  }, [photo]);
 
   const getUserDetails = () => {
     if (signUserIn()) {

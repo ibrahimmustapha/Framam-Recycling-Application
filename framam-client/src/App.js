@@ -5,7 +5,7 @@ import Error from "./components/error";
 import Register from "./components/auth/register";
 import Home from "./components/home";
 import Users from "./components/profile/users";
-import { BrowserRouter, Route, Routes, HashRouter } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 function App() {
   return (
