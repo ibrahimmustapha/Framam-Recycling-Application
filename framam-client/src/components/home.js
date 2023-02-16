@@ -5,6 +5,25 @@ import UserNavbar from "./navbar/user-navbar";
 const Home = () => {
   const [users, setUsers] = useState({});
   const uid = localStorage.getItem("uid");
+  const [token, setToken] = useState("");
+
+  // redeem points from token
+  const redeemPoints = async () => {
+    await axios
+      .put(`http://localhost:3000/api/v1/get_reward/${uid}/${token}`, {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    window.location.reload();
+  };
 
   useEffect(() => {
     axios
@@ -46,7 +65,7 @@ const Home = () => {
                 </i>
               </div>
               <div className="stat-title">Total Points</div>
-              <div className="stat-value text-primary">25.6K</div>
+              <div className="stat-value text-primary">{users.points}</div>
               <div className="stat-desc">21% more than last month</div>
             </div>
 
@@ -72,6 +91,21 @@ const Home = () => {
               <div className="stat-value">10%</div>
               <div className="stat-title">Recycles Completed</div>
               <div className="stat-desc text-secondary">31 tasks remaining</div>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col justify-center items-center mt-10">
+          <div className="form-control">
+            <div className="input-group ">
+              <input
+                type="text"
+                placeholder="Enter token to redeem points"
+                className="input input-bordered max-w-xs"
+                onChange={(e) => setToken(e.target.value)}
+              />
+              <button className="btn secondary" onClick={redeemPoints}>
+                Redeem
+              </button>
             </div>
           </div>
         </div>

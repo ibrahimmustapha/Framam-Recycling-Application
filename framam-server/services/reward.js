@@ -40,8 +40,10 @@ exports.reward = async (req, res) => {
 // Load reward and gain points eg. 100pts
 exports.getReward = async (req, res) => {
   const token = req.params.token;
+  const uid = req.params.uid;
 
   console.log(token);
+
   try {
     const ref = query(collection(db, "reward"), where("token", "==", token));
 
@@ -59,11 +61,11 @@ exports.getReward = async (req, res) => {
 
       // if reward field isTaken is set to true update points field by adding +100 to points
       if (updatedPoints) {
-        const ref = doc(collection(db, "user"), auth.currentUser.uid.toString());
+        const ref = doc(collection(db, "user"), uid);
         updateDoc(ref, {
           points: increment(100),
         });
-        console.log(auth.currentUser);
+        console.log(uid);
       } else {
         console.log("something went wrong :(");
       }
