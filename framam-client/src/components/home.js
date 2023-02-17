@@ -1,29 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import UserNavbar from "./navbar/user-navbar";
+import RedeemPoints from "./reward/redeem-points";
+import RecyclingLocations from "./locations/locations";
 
 const Home = () => {
   const [users, setUsers] = useState({});
   const uid = localStorage.getItem("uid");
-  const [token, setToken] = useState("");
-
-  // redeem points from token
-  const redeemPoints = async () => {
-    await axios
-      .put(`http://localhost:3000/api/v1/get_reward/${uid}/${token}`, {
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-      })
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    window.location.reload();
-  };
 
   useEffect(() => {
     axios
@@ -79,7 +62,6 @@ const Home = () => {
               <div className="stat-value text-secondary">2.6M</div>
               <div className="stat-desc">21% more than last month</div>
             </div>
-
             <div className="stat">
               <div className="stat-figure text-secondary">
                 <div className="avatar online">
@@ -94,21 +76,8 @@ const Home = () => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col justify-center items-center mt-10">
-          <div className="form-control">
-            <div className="input-group ">
-              <input
-                type="text"
-                placeholder="Enter token to redeem points"
-                className="input input-bordered max-w-xs"
-                onChange={(e) => setToken(e.target.value)}
-              />
-              <button className="btn secondary" onClick={redeemPoints}>
-                Redeem
-              </button>
-            </div>
-          </div>
-        </div>
+        <RedeemPoints />
+        <RecyclingLocations />
       </div>
     </UserNavbar>
   );
