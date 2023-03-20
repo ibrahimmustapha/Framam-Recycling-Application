@@ -80,7 +80,7 @@ const Users = () => {
                 <p className="mt-1 text-lg font-medium text-gray-900">
                   {user.bio?.address}
                 </p>
-              </Link>
+              </Link> 
             ))}
           </div>
         </div>

@@ -40,8 +40,10 @@ exports.registerUser = async (req, res) => {
   const {
     email,
     password,
+    phonenumber, 
     fullname: { firstname, lastname },
-    bio: { age, job, address, about },
+    bio: { job, address, about },
+    dob: {day, month, year}
   } = req.body;
 
   if (!email || !password) {
@@ -55,21 +57,28 @@ exports.registerUser = async (req, res) => {
   );
 
   const user = userCredential.user;
+  const currentYear = new Date();
 
   // if user is registered add the following data to the user doc [db].
   if (user) {
     const ref = doc(collection(db, "user"), auth.currentUser.uid);
-    const username = `${firstname}${lastname}${age}`;
+    const username = `${firstname}${lastname}${currentYear.getFullYear() - year}`;
     setDoc(ref, {
       email: auth.currentUser.email,
       uid: auth.currentUser.uid,
       username: username.toLowerCase(),
+      phonenumber: phonenumber,
       fullname: {
         firstname: firstname,
         lastname: lastname,
       },
+      dob: {
+        day: day,
+        month: month,
+        year: year
+      },
       bio: {
-        age: age,
+        age: currentYear.getFullYear() - year,
         job: job,
         address: address,
         about: about,
@@ -79,10 +88,11 @@ exports.registerUser = async (req, res) => {
         url: "",
       },
       points: 0,
+      recycles: 0,
     });
   }
   const idToken = await userCredential.user.getIdToken();
-  res.json({ uid: user.uid, idToken });
+  res.json({ userId: user.uid, idToken });
 };
 
 // Login users

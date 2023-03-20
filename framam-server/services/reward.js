@@ -53,8 +53,7 @@ exports.getReward = async (req, res) => {
     getAllDocs.forEach((docs) => {
       // if isTken field equals 'true', means rewards has being used
       if (docs.data().isTaken === true) {
-        res.status(400).json("Sorry, Reward has already been used!");
-        process.exit(0);
+        return res.status(400).json("Sorry, Reward has already been used!😔");
       }
       // else update token (reward)
       const updatedPoints = updateDoc(docs.ref, { isTaken: true });
@@ -63,7 +62,8 @@ exports.getReward = async (req, res) => {
       if (updatedPoints) {
         const ref = doc(collection(db, "user"), uid);
         updateDoc(ref, {
-          points: increment(100),
+          points: increment(10),
+          recycles: increment(1),
         });
         console.log(uid);
       } else {

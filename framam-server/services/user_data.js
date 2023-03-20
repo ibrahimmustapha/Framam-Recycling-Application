@@ -1,4 +1,3 @@
-const { firestore } = require("firebase-admin");
 const { initializeApp } = require("firebase/app");
 const { getAuth } = require("firebase/auth");
 const {
@@ -6,10 +5,7 @@ const {
   collection,
   getDoc,
   doc,
-  query,
   updateDoc,
-  where,
-  getDocs,
 } = require("firebase/firestore");
 const { uploadBytes, ref, getStorage } = require("firebase/storage");
 const Config = require("../firebase-config");
