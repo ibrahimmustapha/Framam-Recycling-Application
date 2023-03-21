@@ -6,6 +6,7 @@ const {
   getDoc,
   doc,
   updateDoc,
+  getDocs,
 } = require("firebase/firestore");
 const { uploadBytes, ref, getStorage } = require("firebase/storage");
 const Config = require("../firebase-config");
@@ -34,6 +35,25 @@ exports.getUserDetail = async (req, res) => {
     res.send(e);
   }
 };
+
+// get user with most recycling points
+exports.userWithMostPoints = async (req, res) => {
+  try {
+    const ref = collection(db, "user");
+    const users = await getDocs(ref);
+    const allUsers = [];
+    let mostPoints = {};
+    users.forEach((user) => {
+      allUsers.push(user.data());
+      mostPoints = allUsers.reduce((max, user) => {
+        return max.points > user.points ? max : user;
+      })
+    });
+    res.status(200).json(mostPoints);
+  } catch (e) {
+    res.status(401).json(e.message);
+  }
+}
 
 // upload user photo
 exports.uploodPhoto = async (req, res) => {
