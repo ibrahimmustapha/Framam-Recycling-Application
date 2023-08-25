@@ -63,6 +63,7 @@ exports.getReward = async (req, res) => {
         const ref = doc(collection(db, "user"), uid);
         updateDoc(ref, {
           points: increment(10),
+          money: increment(1),
           recycles: increment(1),
         });
         console.log(uid);

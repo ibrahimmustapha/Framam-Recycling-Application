@@ -88,6 +88,7 @@ exports.registerUser = async (req, res) => {
           url: "",
         },
         points: 0,
+        money: 0,
         recycles: 0,
       });
     }
