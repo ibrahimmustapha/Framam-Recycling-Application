@@ -7,13 +7,14 @@ const userData = require('./routes/user-data-router');
 const reward = require('./routes/reward-router');
 const users = require("./routes/users-router");
 const messages = require("./routes/messages-router");
+const task = require("./routes/task-router");
 const tips = require("./routes/tips-router");
 const Config = require('./firebase-config');
 
 // Initialize Firebase
 initializeApp(Config.firebaseConfig);
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 app.use(express.static('public'));
 app.use(express.json())
 app.use(cors());
@@ -25,6 +26,7 @@ app.use(reward);
 app.use(users);
 app.use(messages);
 app.use(tips);
+app.use(task);
 
 app.get('/', (req, res) => {
     res.send('Welcome to Framam Recycling!');

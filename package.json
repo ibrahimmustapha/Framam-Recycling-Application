@@ -9,6 +9,7 @@
   "author": "ibrahim, manaf, frank",
   "license": "ISC",
   "dependencies": {
-    "dotenv": "^16.0.3"
+    "dotenv": "^16.0.3",
+    "nodemon": "^3.0.2"
   }
 }

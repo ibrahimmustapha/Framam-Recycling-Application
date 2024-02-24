@@ -7,12 +7,7 @@ const {
   signInWithEmailAndPassword,
   signOut,
 } = require("firebase/auth");
-const {
-  getFirestore,
-  setDoc,
-  collection,
-  doc,
-} = require("firebase/firestore");
+const { getFirestore, setDoc, collection, doc } = require("firebase/firestore");
 
 // Initialize Firebase
 const app = firebase.initializeApp(Config.firebaseConfig);
@@ -62,7 +57,9 @@ exports.registerUser = async (req, res) => {
     // if user is registered add the following data to the user doc [db].
     if (user) {
       const ref = doc(collection(db, "user"), auth.currentUser.uid);
-      const username = `${firstname}${lastname}${currentYear.getFullYear() - year}`;
+      const username = `${firstname}${lastname}${
+        currentYear.getFullYear() - year
+      }`;
       setDoc(ref, {
         email: auth.currentUser.email,
         uid: auth.currentUser.uid,

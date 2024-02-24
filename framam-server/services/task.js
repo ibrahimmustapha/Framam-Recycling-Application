@@ -3,13 +3,13 @@ const { getAuth } = require("firebase/auth");
 const {
   getFirestore,
   collection,
-  getDoc,
   doc,
-  updateDoc,
   getDocs,
+  addDoc,
+  getDoc,
 } = require("firebase/firestore");
-const { uploadBytes, ref, getStorage } = require("firebase/storage");
 const Config = require("../firebase-config");
+const { getStorage } = require("firebase/storage");
 
 // Initialize Firebase
 const app = initializeApp(Config.firebaseConfig);
@@ -22,11 +22,40 @@ const auth = getAuth();
 const storage = getStorage();
 
 // get user based on uid
-exports.getUserDetail = async (req, res) => {
+exports.addNewTask = async (req, res) => {
+  const {
+    id,
+    title,
+    description,
+    location,
+    status,
+    createdAt,
+  } = req.body;
+  try {
+    const ref = collection(db, "tasks");
+    const newTaskRef = doc(ref);
+    const newTask = await addDoc(ref, {
+      id: newTaskRef.id,
+      title,
+      description,
+      location: "East Legon. Ghana",
+      createdAt: new Date(),
+    });
+    if (newTask) {
+      res.status(200).json("Task added successfully...");
+    }
+  } catch (e) {
+    console.log(e);
+    res.status(200).json(e.message);
+  }
+};
+
+// get task based on uid
+exports.getTaskDetail = async (req, res) => {
   const uid = req.params.uid;
   console.log(uid);
   try {
-    const ref = doc(db, "user", uid);
+    const ref = doc(db, "tasks", uid);
     const querySnapshot = await getDoc(ref);
     console.log(querySnapshot.data());
     res.send(querySnapshot.data());
@@ -36,24 +65,21 @@ exports.getUserDetail = async (req, res) => {
   }
 };
 
-// get user with most recycling points
-exports.userWithMostPoints = async (req, res) => {
+// get all tasks
+exports.getAllTasks = async (req, res) => {
   try {
-    const ref = collection(db, "user");
-    const users = await getDocs(ref);
-    const allUsers = [];
-    let mostPoints = {};
-    users.forEach((user) => {
-      allUsers.push(user.data());
-      mostPoints = allUsers.reduce((max, user) => {
-        return max.points > user.points ? max : user;
-      })
+    const ref = collection(db, "tasks");
+
+    const tasks = await getDocs(ref);
+    const allTasks = [];
+    tasks.forEach((task) => {
+      allTasks.push(task.data());
     });
-    res.status(200).json(mostPoints);
+    res.send(allTasks);
   } catch (e) {
     res.status(401).json(e.message);
   }
-}
+};
 
 // upload user photo
 exports.uploadPhoto = async (req, res) => {
@@ -62,7 +88,7 @@ exports.uploadPhoto = async (req, res) => {
   const metatype = { contentType: file.mimetype, name: file.originalname };
   await uploadBytes(imageRef, file.buffer, metatype)
     .then((snapshot) => {
-      const ref = doc(collection(db, "user"), auth.currentUser.uid);
+      const ref = doc(collection(db, "tasks"), auth.currentUser.uid);
       updateDoc(ref, {
         image: {
           name: file.originalname,
@@ -76,3 +102,4 @@ exports.uploadPhoto = async (req, res) => {
       console.log(e.message);
     });
 };
+

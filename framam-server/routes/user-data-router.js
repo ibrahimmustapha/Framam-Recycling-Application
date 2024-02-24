@@ -8,6 +8,6 @@ const upload = multer({ memoryStorage });
 
 router.get('/api/v1/user/:uid', userDdata.getUserDetail);
 router.get('/api/v1/most-points', userDdata.userWithMostPoints);
-router.post('/api/v1/add_photo', upload.single('photo'), userDdata.uploodPhoto);
+router.post('/api/v1/add_photo', upload.single('photo'), userDdata.uploadPhoto);
 
 module.exports = router;
