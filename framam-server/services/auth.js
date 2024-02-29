@@ -12,7 +12,7 @@ const { getFirestore, setDoc, collection, doc } = require("firebase/firestore");
 // Initialize Firebase
 const app = firebase.initializeApp(Config.firebaseConfig);
 
-const db = getFirestore(app);
+const db = getFirestore();
 const auth = getAuth();
 
 // middleware to verfiy the idToken

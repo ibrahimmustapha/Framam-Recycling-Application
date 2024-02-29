@@ -7,9 +7,10 @@ const {
   getDocs,
   addDoc,
   getDoc,
+  updateDoc,
 } = require("firebase/firestore");
 const Config = require("../firebase-config");
-const { getStorage } = require("firebase/storage");
+const { getStorage, uploadBytes, ref } = require("firebase/storage");
 
 // Initialize Firebase
 const app = initializeApp(Config.firebaseConfig);
@@ -23,27 +24,33 @@ const storage = getStorage();
 
 // get user based on uid
 exports.addNewTask = async (req, res) => {
-  const {
-    id,
-    title,
-    description,
-    location,
-    status,
-    createdAt,
-  } = req.body;
+  const { id, title, description, location, status, createdAt } = req.body;
   try {
-    const ref = collection(db, "tasks");
-    const newTaskRef = doc(ref);
-    const newTask = await addDoc(ref, {
+    const taskRef = collection(db, "tasks");
+    const newTaskRef = doc(taskRef);
+
+    // Upload image to Firebase Storage if an image is provided
+    const file = req.file;
+    const imageRef = ref(storage, file.originalname);
+    const metatype = { contentType: file.mimetype, name: file.originalname };
+
+    // upload task image and update url and name in db storage
+    await uploadBytes(imageRef, file.buffer, metatype);
+
+    await addDoc(taskRef, {
       id: newTaskRef.id,
       title,
       description,
       location: "East Legon. Ghana",
+      status: status,
+      image: {
+        name: file.originalname,
+        url: `https://firebasestorage.googleapis.com/v0/b/framam-recycling-application.appspot.com/o/${file.originalname}?alt=media&token=84102417-ad8c-4b73-9eae-829bee3fb6a3`,
+      },
       createdAt: new Date(),
     });
-    if (newTask) {
-      res.status(200).json("Task added successfully...");
-    }
+
+    res.status(200).json("Task added successfully...");
   } catch (e) {
     console.log(e);
     res.status(200).json(e.message);
@@ -86,9 +93,10 @@ exports.uploadPhoto = async (req, res) => {
   const file = req.file;
   const imageRef = ref(storage, file.originalname);
   const metatype = { contentType: file.mimetype, name: file.originalname };
+  const currentUserId = auth.currentUser.uid;
   await uploadBytes(imageRef, file.buffer, metatype)
     .then((snapshot) => {
-      const ref = doc(collection(db, "tasks"), auth.currentUser.uid);
+      const ref = doc(collection(db, "tasks"), currentUserId);
       updateDoc(ref, {
         image: {
           name: file.originalname,
@@ -102,4 +110,3 @@ exports.uploadPhoto = async (req, res) => {
       console.log(e.message);
     });
 };
-
