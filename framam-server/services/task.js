@@ -24,7 +24,7 @@ const storage = getStorage();
 
 // get user based on uid
 exports.addNewTask = async (req, res) => {
-  const { id, title, description, location, status, createdAt } = req.body;
+  const { id, title, description, location, status, dueDate } = req.body;
   try {
     const taskRef = collection(db, "tasks");
     const newTaskRef = doc(taskRef);
@@ -48,6 +48,7 @@ exports.addNewTask = async (req, res) => {
         url: `https://firebasestorage.googleapis.com/v0/b/framam-recycling-application.appspot.com/o/${file.originalname}?alt=media&token=84102417-ad8c-4b73-9eae-829bee3fb6a3`,
       },
       createdAt: new Date(),
+      dueDate: dueDate
     });
 
     res.status(200).json("Task added successfully...");

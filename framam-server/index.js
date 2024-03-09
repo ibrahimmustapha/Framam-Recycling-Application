@@ -9,6 +9,7 @@ const users = require("./routes/users-router");
 const messages = require("./routes/messages-router");
 const task = require("./routes/task-router");
 const tips = require("./routes/tips-router");
+const faq = require("./routes/faq-router");
 const Config = require('./firebase-config');
 
 // Initialize Firebase
@@ -27,6 +28,7 @@ app.use(users);
 app.use(messages);
 app.use(tips);
 app.use(task);
+app.use(faq);
 
 app.get('/', (req, res) => {
     res.send('Welcome to Framam Recycling!');
